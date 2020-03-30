@@ -4,6 +4,7 @@ from django.db.models import DO_NOTHING, CASCADE
 
 class Language(models.Model):
     name = models.CharField(max_length=64)
+    emoji = models.CharField(max_length=5, blank=True)
 
     def __str__(self):
         return self.name
@@ -23,6 +24,10 @@ class QuizWord(models.Model):
     foreign = models.CharField(max_length=64)
     language = models.ForeignKey(to=Language, on_delete=DO_NOTHING)
     script = models.ForeignKey(to=Script, on_delete=DO_NOTHING, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.english = self.english.lower()
+        return super(QuizWord, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.language.name + ": " + self.english

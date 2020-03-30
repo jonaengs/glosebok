@@ -45,3 +45,10 @@ input {
 input:focus {
     outline: none;
 }
+
+
+@media only screen and (max-width: 1200px) {
+    .container {
+        font-size: 2.5em !important;
+    }
+}
