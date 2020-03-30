@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import TabularInline
 
+from quiz.forms import QuizWordForm
 from quiz.models import Language, QuizWord, Script
 
 
@@ -16,13 +17,10 @@ class LanguageAdmin(admin.ModelAdmin):
 
 
 class QuizWordAdmin(admin.ModelAdmin):
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super(QuizWordAdmin, self).get_form(request, obj, change, **kwargs)
-        return form
+    model = QuizWord
 
     class Media:
-        js = ('static/js/show_script_choices.js', )
-
+        js = ('js/show_hide_script_choices.js', )
 
 
 admin.site.register(QuizWord, QuizWordAdmin)

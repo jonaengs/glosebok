@@ -1,7 +1,12 @@
 {% extends '_base.html' %}
 
+{% block title %}
+{{ language|upper }} QUIZ
+{% endblock %}
+
 {% block body %}
     <h2>{{ language|upper }} QUIZ!</h2>
+    <form action="" autocomplete="off">
     {% for quizword in quizwords %}
         <p id="p{{ quizword.id }}">
             <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">{{ quizword.foreign }}</label>
@@ -13,6 +18,7 @@
                    {% if forloop.first %}autofocus{% endif %}>
         </p>
     {% endfor %}
+    </form>
 {% endblock %}
 
 {% block script %}

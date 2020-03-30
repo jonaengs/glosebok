@@ -1,9 +1,9 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
+from django.http import JsonResponse
 from django.views.generic import DetailView
 
-from dal import autocomplete
-
 from quiz.models import Language, Script
+from quiz.serializers import ScriptSerializer
 
 
 class LanguageQuizView(DetailView):
@@ -17,8 +17,12 @@ class LanguageQuizView(DetailView):
         return ctx
 
 
-class ScriptAutocomplete(autocomplete.Select2QuerySetView, PermissionRequiredMixin):
-    permission_required = 'quiz.add_quizword'
+@permission_required('quiz.add_quizword')
+def get_scripts(request):
+    language_id = request.GET.get('language', None)
+    if not language_id:
+        return JsonResponse({})
+    scripts = Script.objects.filter(language__id=language_id)
+    serializer = ScriptSerializer(scripts, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
-    def get_queryset(self):
-        return Script.objects.filter(language__name=self.q)

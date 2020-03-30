@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 3rd party
-    'dal',
-    'dal_select2',
+    'rest_framework',
 
     # apps
     'quiz',
