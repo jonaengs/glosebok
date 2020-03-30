@@ -1,17 +1,17 @@
 {% extends '_base.html' %}
 
-
 {% block body %}
     <h2>{{ language|upper }} QUIZ!</h2>
     {% for quizword in language.quizword_set.all %}
-        <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">{{ quizword.foreign }}</label>
-        <input type="text"
-               correct="{{ quizword.english }}"
-               onchange="checkAns(event)"
-               class="answer-input"
-               id="{{ quizword.id }}"
-               {% if forloop.first %}autofocus{% endif %}
-        >
+        <p id="p{{ quizword.id }}">
+            <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">{{ quizword.foreign }}</label>
+            <input type="text"
+                   correct="{{ quizword.english }}"
+                   onchange="checkAns(event)"
+                   class="answer-input"
+                   id="{{ quizword.id }}"
+                   {% if forloop.first %}autofocus{% endif %}>
+        </p>
     {% endfor %}
 {% endblock %}
 
@@ -30,14 +30,18 @@
             focusNextInput(input);
         }
 
-        function focusNextInput(currentInput) {
-            let next = currentInput.nextElementSibling; // works as long as all inputs are on the same level
-            while (next !== null && next.className !== "answer-input") {
-                next = next.nextElementSibling;
+        function focusNextInput(elem) {
+            let next = elem.nextElementSibling;
+            if (next === null) {
+                let parent = elem.parentElement;
+                if (parent !== null) {
+                    focusNextInput(parent.nextElementSibling.firstElementChild)
+                }
             }
-            if (next !== null) {
-
+            else if (next.classList.contains('answer-input')) {
                 next.focus();
+            } else {
+                focusNextInput(next);
             }
         }
     </script>
