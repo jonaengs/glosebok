@@ -2,7 +2,7 @@
 
 {% block body %}
     <h2>{{ language|upper }} QUIZ!</h2>
-    {% for quizword in language.quizword_set.all %}
+    {% for quizword in quizwords %}
         <p id="p{{ quizword.id }}">
             <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">{{ quizword.foreign }}</label>
             <input type="text"
