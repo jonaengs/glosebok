@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+
+
+{% block body %}
+    <h2>{{ language|upper }} QUIZ!</h2>
+    {% for quizword in language.quizword_set.all %}
+        <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">{{ quizword.foreign }}</label>
+        <input type="text"
+               correct="{{ quizword.english }}"
+               onchange="checkAns(event)"
+               class="answer-input"
+               id="{{ quizword.id }}"
+               {% if forloop.first %}autofocus{% endif %}
+        >
+    {% endfor %}
+{% endblock %}
+
+{% block script %}
+    <script>
+        function checkAns(e) {
+            let input = e.target;
+            let correct_value = input.getAttribute('correct');
+            if (input.value === correct_value) {
+                input.style.borderColor = 'green';
+            } else {
+                input.style.borderColor = 'red';
+                document.getElementById(input.id+'-label').innerText += ' = ' + correct_value;
+            }
+            input.setAttribute('disabled', true);
+            focusNextInput(input);
+        }
+
+        function focusNextInput(currentInput) {
+            let next = currentInput.nextElementSibling; // works as long as all inputs are on the same level
+            while (next !== null && next.className !== "answer-input") {
+                next = next.nextElementSibling;
+            }
+            if (next !== null) {
+
+                next.focus();
+            }
+        }
+    </script>
+{% endblock %}
