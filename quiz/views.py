@@ -48,7 +48,7 @@ class QuizWordListView(ListView):
 class QuizWordCreateView(CreateView):
     model = QuizWord
     fields = '__all__'
-    success_url = reverse_lazy('add_quizview')
+    success_url = reverse_lazy('add_quizword')
 
 
 @permission_required('quiz.add_quizword')

@@ -9,6 +9,7 @@
     <h2>Add new quizword:</h2>
     <form method="POST">{% csrf_token %}
         {{ form.as_p }}
+        <button type="submit">Save</button>
     </form>
 {% endblock %}
 

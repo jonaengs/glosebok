@@ -8,9 +8,11 @@
 {% block body %}
     <h2>{{ language|upper }} QUIZ!</h2>
     <form action="" autocomplete="off">
+    {% with language.script_set.all.exists as show_script %}
     {% for quizword in quizwords %}
         <p id="p{{ quizword.id }}">
-            <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">{{ quizword.foreign }}</label>
+            <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">
+                {{ quizword.foreign }} ({{ quizword.script }})</label>
             <input type="text"
                    correct="{{ quizword.english }}"
                    onchange="checkAns(event)"
@@ -19,6 +21,7 @@
                    {% if forloop.first %}autofocus{% endif %}>
         </p>
     {% endfor %}
+    {% endwith %}
     </form>
 {% endblock %}
 

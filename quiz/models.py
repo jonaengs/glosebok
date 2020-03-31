@@ -22,6 +22,9 @@ class Script(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('-name', )
+
 
 class QuizWord(models.Model):
     english = models.CharField(max_length=64)
