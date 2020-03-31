@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import TabularInline
 
-from quiz.forms import QuizWordForm
 from quiz.models import Language, QuizWord, Script
 
 
@@ -18,6 +17,7 @@ class LanguageAdmin(admin.ModelAdmin):
 
 class QuizWordAdmin(admin.ModelAdmin):
     model = QuizWord
+    readonly_fields = ('datetime_added', )
 
     class Media:
         js = ('js/show_hide_script_choices.js', )

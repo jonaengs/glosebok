@@ -3,6 +3,6 @@
 {% block body %}
     <h2>Available language quizzes:</h2>
     {% for language in language_list %}
-        <p><a href="{% url 'language_quiz' pk=language.id %}">{{ language.emoji }} {{ language.name }}</a></p>
+        <p><a href="{% url 'language_detail' slug=language.slug %}">{{ language.emoji }} {{ language.name }}</a></p>
     {% endfor %}
 {% endblock %}

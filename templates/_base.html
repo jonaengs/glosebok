@@ -20,7 +20,9 @@
 
     <div class="container">
         <div class="header">
-            <h2><a href="{% url 'language_list' %}">HOME</a></h2>
+            <h2 style="display: inline; padding-right: 30px;"><a href="{% url 'language_list' %}">HOME</a></h2>
+            <p style="display: inline; padding-right: 30px;"><a href="{% url 'add_quizword' %}">Add words</a></p>
+            <p style="display: inline"><a href="{% url 'quizword_list' %}">All words</a></p>
         </div>
 
         <div class="content-container body-block-container">

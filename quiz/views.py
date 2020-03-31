@@ -3,13 +3,13 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, ListView
 
+from quiz.forms import QuizWordForm
 from quiz.models import Language, Script, QuizWord
 from quiz.serializers import ScriptSerializer
 
 
 class LanguageQuizView(DetailView):
     model = Language
-    template_name = 'quiz/language_quiz.html'
 
     def get_context_data(self, **kwargs):
         language = kwargs['object']
@@ -47,7 +47,7 @@ class QuizWordListView(ListView):
 
 class QuizWordCreateView(CreateView):
     model = QuizWord
-    fields = '__all__'
+    form_class = QuizWordForm
     success_url = reverse_lazy('add_quizword')
 
 
