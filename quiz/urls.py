@@ -1,11 +1,11 @@
 from django.urls import path
-from django.views.generic import ListView
 
-from quiz.models import Language
-from quiz.views import LanguageQuizView, get_scripts
+from quiz.views import LanguageQuizView, get_scripts, LanguageListView, QuizWordCreateView, QuizWordListView
 
 urlpatterns = [
-    path('', ListView.as_view(model=Language), name='language_list'),
+    path('', LanguageListView.as_view(), name='language_list'),
+    path('words/', QuizWordListView.as_view(), name='quizword_list'),
+    path('add/', QuizWordCreateView.as_view(), name='add_quizword'),
     path('<int:pk>/', LanguageQuizView.as_view(), name='language_quiz'),
 
     # autocomplete view

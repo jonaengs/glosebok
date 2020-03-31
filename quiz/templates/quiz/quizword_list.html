@@ -1,0 +1,38 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}
+    Quizwords
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+    input[type="checkbox"] {
+        margin-right: 20px;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h2>All words:</h2>
+    <p><strong>show languages:</strong>
+        <label for="all-checkbox" style="margin-left: 10px">All</label>
+        <input type="checkbox" id="all-checkbox" name="all" value="all" onchange="setParamsAndReload()">
+        {% for language in languages %}
+            <label for="lang{{ language.id }}">
+                {{ language.emoji }} {{ language.name }}</label>
+            <input type="checkbox" id="{{ language }}-checkbox"
+                   name="{{ language.name }}" value="{{ language.name }}"
+                   onchange="uncheckAllBoxAndReload()">
+        {% endfor %}
+    </p>
+    <hr>
+    {% for word in quizword_list %}
+        <p>{{ word.language.emoji }} - {{ word.english }} = {{ word.foreign }}</p>
+    {% endfor %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'quiz/js/filter_language_words.js' %}"></script>
+{% endblock %}

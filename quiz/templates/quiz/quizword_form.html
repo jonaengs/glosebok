@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}
+    Add word
+{% endblock %}
+
+{% block body %}
+    <h2>Add new quizword:</h2>
+    <form method="POST">{% csrf_token %}
+        {{ form.as_p }}
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/show_hide_script_choices.js' %}"></script>
+{% endblock %}

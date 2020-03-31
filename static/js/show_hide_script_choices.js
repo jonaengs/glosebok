@@ -1,7 +1,8 @@
 window.onload = function() {
     const script_input = document.getElementById('id_script');
     const options = Array.from(script_input.children).slice();
-    script_input.setAttribute('disabled', "");
+    script_input.parentElement.style.display = 'none';
+
 
     document.getElementById('id_language').onchange = get_script_choices;
 
@@ -24,11 +25,11 @@ window.onload = function() {
     function setup_script_input(data) {
         Array.from(script_input.children).forEach(child => child.remove());
         if (data.length) {
-            script_input.removeAttribute("disabled");
+            script_input.parentElement.style.display = 'block';
             let new_children = data.map(language => options[language.id]);
             new_children.forEach(child => script_input.appendChild(child));
         } else {
-            script_input.setAttribute("disabled", "");
+            script_input.parentElement.style.display = 'none';
             script_input.appendChild(options[0]);
         }
     }

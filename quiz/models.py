@@ -3,8 +3,12 @@ from django.db.models import DO_NOTHING, CASCADE
 
 
 class Language(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     emoji = models.CharField(max_length=5, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(Language, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -31,3 +35,6 @@ class QuizWord(models.Model):
 
     def __str__(self):
         return self.language.name + ": " + self.english
+
+    class Meta:
+        ordering = ('english', )
