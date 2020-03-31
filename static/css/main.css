@@ -42,7 +42,7 @@ body {
 }
 
 
-input[type="text"], select {
+input[type="text"], input[type="number"], select {
     border-radius: 3px;
     box-shadow: 2px 2px 2px rgb(159, 169, 173);
     border-style: solid;

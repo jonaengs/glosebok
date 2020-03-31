@@ -1,5 +1,9 @@
+import random
+
 from django.contrib.auth.decorators import permission_required
-from django.http import JsonResponse
+from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import QuerySet
+from django.http import JsonResponse, QueryDict
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, ListView
 
@@ -11,10 +15,29 @@ from quiz.serializers import ScriptSerializer
 class LanguageQuizView(DetailView):
     model = Language
 
+    def get(self, request, *args, **kwargs):
+        num_qs, translate_to = request.GET.get('num_qs'), request.GET.get('translate_to')
+        if num_qs and translate_to:
+            self.ready = True
+            self.num_qs = int(num_qs)
+            self.translate_to = translate_to
+        else:
+            self.ready = False
+        return super(LanguageQuizView, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         language = kwargs['object']
         ctx = super(LanguageQuizView, self).get_context_data(**kwargs)
-        ctx.update({'quizwords': language.quizword_set.all()})
+        if self.ready:
+            quizwords = language.quizword_set.all()
+            if len(quizwords) >= self.num_qs:
+                quizwords = random.choices(quizwords, k=self.num_qs)
+            ctx.update({
+                'quizwords': quizwords,
+                'show_script': language.script_set.exists(),
+                'ready': self.ready,
+                'translate_to': self.translate_to,
+            })
         return ctx
 
 
@@ -45,10 +68,11 @@ class QuizWordListView(ListView):
         return ctx
 
 
-class QuizWordCreateView(CreateView):
+class QuizWordCreateView(SuccessMessageMixin, CreateView):
     model = QuizWord
     form_class = QuizWordForm
     success_url = reverse_lazy('add_quizword')
+    success_message = "%(english)s - %(foreign)s added successfully"
 
 
 @permission_required('quiz.add_quizword')
