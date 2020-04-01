@@ -16,7 +16,7 @@
         </ul>
     {% endif %}
 
-    <form method="POST">{% csrf_token %}
+    <form method="POST" autocomplete="off">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save</button>
     </form>
@@ -24,4 +24,17 @@
 
 {% block script %}
     <script src="{% static 'js/show_hide_script_choices.js' %}"></script>
+    <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('language')) {
+            Array.from(document.getElementById("id_language").children)
+                .find(child => child.innerHTML === urlParams.get('language')).setAttribute('selected', '');
+            if (urlParams.get('script') === 'None') {
+                document.getElementById('id_script').parentElement.style.display = 'none';
+            } else {
+                Array.from(document.getElementById("id_script").children)
+                    .find(child => child.innerHTML === urlParams.get('script')).setAttribute('selected', '');
+            }
+        }
+    </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import DO_NOTHING, CASCADE
+from django.db.models import DO_NOTHING, CASCADE, UniqueConstraint
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -51,3 +51,7 @@ class QuizWord(models.Model):
 
     class Meta:
         ordering = ('english', )
+        constraints = (
+            UniqueConstraint(
+                fields=('english', 'foreign', 'script', 'language'), name='unique_language_script_combination'),
+        )

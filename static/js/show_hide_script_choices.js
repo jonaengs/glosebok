@@ -15,8 +15,8 @@ window.onload = function() {
         }
     };
 
-    function get_script_choices(e) {
-        let language_id = e.target.value;
+    function get_script_choices() {
+        let language_id = language_input.value;
         let url = '/match-scripts/?language=' + language_id;
         xhttp.open('GET', url);
         xhttp.send();  // calls setup_script_input with received data

@@ -76,7 +76,7 @@ button {
     transition: background-color 150ms linear;
 }
 
-button[type="submit"]:hover {
+button[type="submit"]:hover, button[type="submit"]:focus {
     background-color: rgb(200, 250, 200);
 }
 

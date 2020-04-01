@@ -71,8 +71,10 @@ class QuizWordListView(ListView):
 class QuizWordCreateView(SuccessMessageMixin, CreateView):
     model = QuizWord
     form_class = QuizWordForm
-    success_url = reverse_lazy('add_quizword')
     success_message = "%(english)s - %(foreign)s added successfully"
+
+    def get_success_url(self):
+        return reverse_lazy('add_quizword') + f"?language={self.object.language}&script={self.object.script}"
 
 
 @permission_required('quiz.add_quizword')
