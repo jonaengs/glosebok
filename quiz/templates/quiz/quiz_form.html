@@ -1,26 +1,22 @@
 <form action="" autocomplete="off">
     {% for quizword in quizwords %}
         <p id="p{{ quizword.id }}">
-
             <label for="{{ quizword.id }}" id="{{ quizword.id }}-label">
-            {% if translate_to == 'english'%}
-                {{ quizword.foreign }} </label>
-            {% elif translate_to == 'foreign' %}
-                {{ quizword.english }}
-                {% if show_script %}({{ quizword.script }}){% endif %} </label>
-            {% endif %}
+                {% if show_script %}
+                    {{ quizword.english }} ({{ quizword.script }})
+                {% else %}
+                    {{ quizword.foreign }}
+                {% endif %}
+            </label>
 
-            <input type="text"
+            <input type="text" class="answer-input" id="{{ quizword.id }}"
                 onchange="checkAns(event)"
-                class="answer-input"
-                id="{{ quizword.id }}"
-                {% if forloop.first %}autofocus{% endif %}
-            {% if translate_to == 'english'%}
-                correct="{{ quizword.english }}">
-            {% elif translate_to == 'foreign' %}
-                correct="{{ quizword.foreign }}">
-            {% endif %}
-
+                {% if translate_to == 'english'%}
+                   correct="{{ quizword.english }}"
+                {% elif translate_to == 'foreign' %}
+                   correct="{{ quizword.foreign }}"
+                {% endif %}
+                {% if forloop.first %}autofocus{% endif %}>
         </p>
     {% endfor %}
 </form>

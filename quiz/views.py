@@ -2,41 +2,38 @@ import random
 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import QuerySet
-from django.http import JsonResponse, QueryDict
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, ListView
+from rest_framework.generics import ListAPIView
 
 from quiz.forms import QuizWordForm
 from quiz.models import Language, Script, QuizWord
-from quiz.serializers import ScriptSerializer
+from quiz.serializers import ScriptSerializer, QuizWordSerializer
 
 
-class LanguageQuizView(DetailView):
+class QuizDetailView(DetailView):
+    """
+    On first entering the page, the user is presented with a simple form for specifying the details of the quiz.
+    These are sent as query parameters: 'num_qws' (number of quizwords) and 'translate_to' (english or foreign)
+    On detail form submission, the actual quiz is generated.
+    """
     model = Language
-
-    def get(self, request, *args, **kwargs):
-        num_qs, translate_to = request.GET.get('num_qs'), request.GET.get('translate_to')
-        if num_qs and translate_to:
-            self.ready = True
-            self.num_qs = int(num_qs)
-            self.translate_to = translate_to
-        else:
-            self.ready = False
-        return super(LanguageQuizView, self).get(request, *args, **kwargs)
+    template_name = 'quiz/quiz_page.html'
 
     def get_context_data(self, **kwargs):
-        language = kwargs['object']
-        ctx = super(LanguageQuizView, self).get_context_data(**kwargs)
-        if self.ready:
-            quizwords = language.quizword_set.all()
-            if len(quizwords) >= self.num_qs:
-                quizwords = random.choices(quizwords, k=self.num_qs)
+        ctx = super(QuizDetailView, self).get_context_data(**kwargs)
+        language = self.object
+        num_qws, translate_to = self.request.GET.get('num_qws'), self.request.GET.get('translate_to')
+
+        if num_qws and translate_to:  # form has been filled out correctly and quiz can be generated
+            all_qws = language.quizword_set.all()
+            num_qws = min(int(num_qws), all_qws.count())  # dont sample more than there are elems in the set
+            selected_qws = random.sample(list(all_qws), k=num_qws)
             ctx.update({
-                'quizwords': quizwords,
-                'show_script': language.script_set.exists(),
-                'ready': self.ready,
-                'translate_to': self.translate_to,
+                'quizwords': selected_qws,
+                'show_script': language.script_set.exists() and translate_to == 'foreign',
+                'translate_to': translate_to,
             })
         return ctx
 
@@ -62,7 +59,7 @@ class QuizWordListView(ListView):
             return QuizWord.objects.filter(language__name__in=languages)  # ugly I know, but it's kinda fun right?
         return self.model.objects.all()
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, *args, object_list=None, **kwargs):
         ctx = super(QuizWordListView, self).get_context_data(**kwargs)
         ctx.update({'languages': Language.objects.all()})
         return ctx
@@ -79,9 +76,13 @@ class QuizWordCreateView(SuccessMessageMixin, CreateView):
 
 @permission_required('quiz.add_quizword')
 def get_scripts(request):
-    language_id = request.GET.get('language', None)
-    if not language_id:
-        return JsonResponse({})
+    language_id = request.GET.get('language', "")
     scripts = Script.objects.filter(language__id=language_id)
     serializer = ScriptSerializer(scripts, many=True)
     return JsonResponse(serializer.data, safe=False)
+
+
+class QuizWordAPI(ListAPIView):
+    queryset = QuizWord.objects
+    serializer_class = QuizWordSerializer
+

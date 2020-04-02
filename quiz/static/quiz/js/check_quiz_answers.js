@@ -1,7 +1,7 @@
 function checkAns(e) {
     let input = e.target;
     let correct_value = input.getAttribute('correct');
-    if (input.value.toLowerCase() === correct_value) {
+    if (input.value.toLowerCase().trim() === correct_value) {
         input.style.borderColor = 'green';
     } else {
         input.style.borderColor = 'red';
